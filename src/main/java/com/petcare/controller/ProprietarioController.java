@@ -45,8 +45,9 @@ public class ProprietarioController {
             description = "Lista de proprietários retornada com sucesso"
     )
     @GetMapping
-    public List<Proprietario> listarTodos() {
-        return proprietarioService.listarTodos();
+    public ResponseEntity<List<Proprietario>> listarTodos() {
+        List<Proprietario> proprietarios = proprietarioService.listarTodos();
+        return ResponseEntity.ok(proprietarios);
     }
 
     @Operation(
@@ -58,10 +59,12 @@ public class ProprietarioController {
             @ApiResponse(responseCode = "404", description = "Proprietário não encontrado")
     })
     @GetMapping("/{id}")
-    public Proprietario buscarPorId(
+    public ResponseEntity<Proprietario> buscarPorId(
             @Parameter(description = "ID do proprietário", example = "2")
             @PathVariable Long id) {
-        return proprietarioService.buscarPorId(id);
+
+        Proprietario proprietario = proprietarioService.buscarPorId(id);
+        return ResponseEntity.ok(proprietario);
     }
 
     @Operation(
@@ -73,11 +76,13 @@ public class ProprietarioController {
             @ApiResponse(responseCode = "404", description = "Proprietário não encontrado")
     })
     @PutMapping("/{id}")
-    public Proprietario atualizar(
+    public ResponseEntity<Proprietario> atualizar(
             @Parameter(description = "ID do proprietário", example = "2")
             @PathVariable Long id,
             @RequestBody Proprietario proprietario) {
-        return proprietarioService.atualizar(id, proprietario);
+
+        Proprietario proprietarioAtualizado = proprietarioService.atualizar(id, proprietario);
+        return ResponseEntity.ok(proprietarioAtualizado);
     }
 
     @Operation(
@@ -89,9 +94,11 @@ public class ProprietarioController {
             @ApiResponse(responseCode = "404", description = "Proprietário não encontrado")
     })
     @DeleteMapping("/{id}")
-    public void deletar(
+    public ResponseEntity<Void> deletar(
             @Parameter(description = "ID do proprietário", example = "2")
             @PathVariable Long id) {
+
         proprietarioService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }
