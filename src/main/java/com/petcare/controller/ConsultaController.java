@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -26,12 +27,13 @@ public class ConsultaController {
             description = "Cadastra uma nova consulta no sistema"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Consulta cadastrada com sucesso"),
+            @ApiResponse(responseCode = "201", description = "Consulta cadastrada com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @PostMapping
-    public Consulta salvar(@Valid @RequestBody Consulta consulta) {
-        return consultaService.salvar(consulta);
+    public ResponseEntity<Consulta> salvar(@Valid @RequestBody Consulta consulta) {
+        Consulta novaConsulta = consultaService.salvar(consulta);
+        return ResponseEntity.status(201).body(novaConsulta);
     }
 
     @Operation(

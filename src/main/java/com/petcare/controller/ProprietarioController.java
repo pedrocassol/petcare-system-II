@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -26,12 +27,13 @@ public class ProprietarioController {
             description = "Cadastra um novo proprietário no sistema"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Proprietário cadastrado com sucesso"),
+            @ApiResponse(responseCode = "201", description = "Proprietário cadastrado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @PostMapping
-    public Proprietario salvar(@Valid @RequestBody Proprietario proprietario) {
-        return proprietarioService.salvar(proprietario);
+    public ResponseEntity<Proprietario> salvar(@Valid @RequestBody Proprietario proprietario) {
+        Proprietario novoProprietario = proprietarioService.salvar(proprietario);
+        return ResponseEntity.status(201).body(novoProprietario);
     }
 
     @Operation(

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -26,12 +27,13 @@ public class PetController {
             description = "Cadastra um novo pet no sistema"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Pet cadastrado com sucesso"),
+            @ApiResponse(responseCode = "201", description = "Pet cadastrado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @PostMapping
-    public Pet salvar(@Valid @RequestBody Pet pet) {
-        return petService.salvar(pet);
+    public ResponseEntity<Pet> salvar(@Valid @RequestBody Pet pet) {
+        Pet novoPet = petService.salvar(pet);
+        return ResponseEntity.status(201).body(novoPet);
     }
 
     @Operation(
