@@ -45,8 +45,9 @@ public class ConsultaController {
             description = "Lista de consultas retornada com sucesso"
     )
     @GetMapping
-    public List<Consulta> listarTodos() {
-        return consultaService.listarTodos();
+    public ResponseEntity<List<Consulta>> listarTodos() {
+        List<Consulta> consultas = consultaService.listarTodos();
+        return ResponseEntity.ok(consultas);
     }
 
     @Operation(
@@ -58,10 +59,12 @@ public class ConsultaController {
             @ApiResponse(responseCode = "404", description = "Consulta não encontrada")
     })
     @GetMapping("/{id}")
-    public Consulta buscarPorId(
+    public ResponseEntity<Consulta> buscarPorId(
             @Parameter(description = "ID da consulta", example = "1")
             @PathVariable Long id) {
-        return consultaService.buscarPorId(id);
+
+        Consulta consulta = consultaService.buscarPorId(id);
+        return ResponseEntity.ok(consulta);
     }
 
     @Operation(
@@ -73,11 +76,13 @@ public class ConsultaController {
             @ApiResponse(responseCode = "404", description = "Consulta não encontrada")
     })
     @PutMapping("/{id}")
-    public Consulta atualizar(
+    public ResponseEntity<Consulta> atualizar(
             @Parameter(description = "ID da consulta", example = "1")
             @PathVariable Long id,
             @RequestBody Consulta consulta) {
-        return consultaService.atualizar(id, consulta);
+
+        Consulta consultaAtualizada = consultaService.atualizar(id, consulta);
+        return ResponseEntity.ok(consultaAtualizada);
     }
 
     @Operation(
@@ -89,9 +94,11 @@ public class ConsultaController {
             @ApiResponse(responseCode = "404", description = "Consulta não encontrada")
     })
     @DeleteMapping("/{id}")
-    public void deletar(
+    public ResponseEntity<Void> deletar(
             @Parameter(description = "ID da consulta", example = "1")
             @PathVariable Long id) {
+
         consultaService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }
