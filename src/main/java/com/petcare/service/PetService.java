@@ -3,6 +3,7 @@ package com.petcare.service;
 import com.petcare.model.Pet;
 import com.petcare.repository.PetRepository;
 import org.springframework.stereotype.Service;
+import com.petcare.infra.PetNotFoundException;
 
 import java.util.List;
 
@@ -24,15 +25,28 @@ public class PetService {
     }
 
     public Pet buscarPorId(Long id) {
-        return petRepository.findById(id).orElse(null);
+        return petRepository.findById(id)
+                .orElseThrow(() -> new PetNotFoundException(
+                        "Pet não encontrado para o ID: " + id
+                ));
     }
 
     public Pet atualizar(Long id, Pet pet) {
-        pet.setId(id);
+        Pet existente = petRepository.findById(id)
+                .orElseThrow(() -> new PetNotFoundException(
+                        "Pet não encontrado para o ID: " + id
+                ));
+
+        pet.setId(existente.getId());
         return petRepository.save(pet);
     }
 
     public void deletar(Long id) {
+        petRepository.findById(id)
+                .orElseThrow(() -> new PetNotFoundException(
+                        "Pet não encontrado para o ID: " + id
+                ));
+
         petRepository.deleteById(id);
     }
 }

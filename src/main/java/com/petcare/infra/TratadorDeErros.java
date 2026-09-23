@@ -13,4 +13,11 @@ public class TratadorDeErros {
 
         return ResponseEntity.status(404).body(exception.getMessage());
     }
+
+    @ExceptionHandler(PetNotFoundException.class)
+    public ResponseEntity<String> tratarPetNaoEncontrado(
+            PetNotFoundException exception) {
+
+        return ResponseEntity.status(404).body(exception.getMessage());
+    }
 }
