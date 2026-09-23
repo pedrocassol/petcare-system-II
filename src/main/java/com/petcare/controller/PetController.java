@@ -45,8 +45,9 @@ public class PetController {
             description = "Lista de pets retornada com sucesso"
     )
     @GetMapping
-    public List<Pet> listarTodos() {
-        return petService.listarTodos();
+    public ResponseEntity<List<Pet>> listarTodos() {
+        List<Pet> pets = petService.listarTodos();
+        return ResponseEntity.ok(pets);
     }
 
     @Operation(
@@ -58,10 +59,12 @@ public class PetController {
             @ApiResponse(responseCode = "404", description = "Pet não encontrado")
     })
     @GetMapping("/{id}")
-    public Pet buscarPorId(
+    public ResponseEntity<Pet> buscarPorId(
             @Parameter(description = "ID do pet", example = "4")
             @PathVariable Long id) {
-        return petService.buscarPorId(id);
+
+        Pet pet = petService.buscarPorId(id);
+        return ResponseEntity.ok(pet);
     }
 
     @Operation(
@@ -73,11 +76,13 @@ public class PetController {
             @ApiResponse(responseCode = "404", description = "Pet não encontrado")
     })
     @PutMapping("/{id}")
-    public Pet atualizar(
+    public ResponseEntity<Pet> atualizar(
             @Parameter(description = "ID do pet", example = "4")
             @PathVariable Long id,
             @RequestBody Pet pet) {
-        return petService.atualizar(id, pet);
+
+        Pet petAtualizado = petService.atualizar(id, pet);
+        return ResponseEntity.ok(petAtualizado);
     }
 
     @Operation(
@@ -89,9 +94,11 @@ public class PetController {
             @ApiResponse(responseCode = "404", description = "Pet não encontrado")
     })
     @DeleteMapping("/{id}")
-    public void deletar(
+    public ResponseEntity<Void> deletar(
             @Parameter(description = "ID do pet", example = "4")
             @PathVariable Long id) {
+
         petService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }
