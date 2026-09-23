@@ -20,4 +20,11 @@ public class TratadorDeErros {
 
         return ResponseEntity.status(404).body(exception.getMessage());
     }
+
+    @ExceptionHandler(ConsultaNotFoundException.class)
+    public ResponseEntity<String> tratarConsultaNaoEncontrada(
+            ConsultaNotFoundException exception) {
+
+        return ResponseEntity.status(404).body(exception.getMessage());
+    }
 }

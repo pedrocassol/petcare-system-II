@@ -3,6 +3,7 @@ package com.petcare.service;
 import com.petcare.model.Consulta;
 import com.petcare.repository.ConsultaRepository;
 import org.springframework.stereotype.Service;
+import com.petcare.infra.ConsultaNotFoundException;
 
 import java.util.List;
 
@@ -24,15 +25,28 @@ public class ConsultaService {
     }
 
     public Consulta buscarPorId(Long id) {
-        return consultaRepository.findById(id).orElse(null);
+        return consultaRepository.findById(id)
+                .orElseThrow(() -> new ConsultaNotFoundException(
+                        "Consulta não encontrada para o ID: " + id
+                ));
     }
 
     public Consulta atualizar(Long id, Consulta consulta) {
-        consulta.setId(id);
+        Consulta existente = consultaRepository.findById(id)
+                .orElseThrow(() -> new ConsultaNotFoundException(
+                        "Consulta não encontrada para o ID: " + id
+                ));
+
+        consulta.setId(existente.getId());
         return consultaRepository.save(consulta);
     }
 
     public void deletar(Long id) {
+        consultaRepository.findById(id)
+                .orElseThrow(() -> new ConsultaNotFoundException(
+                        "Consulta não encontrada para o ID: " + id
+                ));
+
         consultaRepository.deleteById(id);
     }
 }
