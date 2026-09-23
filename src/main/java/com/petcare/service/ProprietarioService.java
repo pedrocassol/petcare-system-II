@@ -3,6 +3,7 @@ package com.petcare.service;
 import com.petcare.model.Proprietario;
 import com.petcare.repository.ProprietarioRepository;
 import org.springframework.stereotype.Service;
+import com.petcare.infra.ProprietarioNotFoundException;
 
 import java.util.List;
 
@@ -24,15 +25,28 @@ public class ProprietarioService {
     }
 
     public Proprietario buscarPorId(Long id) {
-        return proprietarioRepository.findById(id).orElse(null);
+        return proprietarioRepository.findById(id)
+                .orElseThrow(() -> new ProprietarioNotFoundException(
+                        "Proprietário não encontrado para o ID: " + id
+                ));
     }
 
     public Proprietario atualizar(Long id, Proprietario proprietario) {
-        proprietario.setId(id);
+        Proprietario existente = proprietarioRepository.findById(id)
+                .orElseThrow(() -> new ProprietarioNotFoundException(
+                        "Proprietário não encontrado para o ID: " + id
+                ));
+
+        proprietario.setId(existente.getId());
         return proprietarioRepository.save(proprietario);
     }
 
     public void deletar(Long id) {
+        proprietarioRepository.findById(id)
+                .orElseThrow(() -> new ProprietarioNotFoundException(
+                        "Proprietário não encontrado para o ID: " + id
+                ));
+
         proprietarioRepository.deleteById(id);
     }
 }
