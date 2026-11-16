@@ -6,6 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/consultas")
+@Tag(
+        name = "Consultas",
+        description = "Operações relacionadas às consultas veterinárias"
+)
 public class ConsultaController {
 
     private final ConsultaService consultaService;
@@ -27,11 +35,27 @@ public class ConsultaController {
             description = "Cadastra uma nova consulta no sistema"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Consulta cadastrada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Consulta cadastrada com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Consulta.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @PostMapping
-    public ResponseEntity<Consulta> salvar(@Valid @RequestBody Consulta consulta) {
+    public ResponseEntity<Consulta> salvar(
+            @Valid @RequestBody Consulta consulta) {
+
         Consulta novaConsulta = consultaService.salvar(consulta);
         return ResponseEntity.status(201).body(novaConsulta);
     }
@@ -42,7 +66,13 @@ public class ConsultaController {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "Lista de consultas retornada com sucesso"
+            description = "Lista de consultas retornada com sucesso",
+            content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(
+                            schema = @Schema(implementation = Consulta.class)
+                    )
+            )
     )
     @GetMapping
     public ResponseEntity<List<Consulta>> listarTodos() {
@@ -55,8 +85,22 @@ public class ConsultaController {
             description = "Retorna uma consulta específica pelo seu ID"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Consulta encontrada"),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Consulta encontrada",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Consulta.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Consulta não encontrada",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @GetMapping("/{id}")
     public ResponseEntity<Consulta> buscarPorId(
@@ -72,8 +116,30 @@ public class ConsultaController {
             description = "Atualiza os dados de uma consulta existente"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Consulta atualizada com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Consulta atualizada com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Consulta.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Consulta não encontrada",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @PutMapping("/{id}")
     public ResponseEntity<Consulta> atualizar(
@@ -90,8 +156,18 @@ public class ConsultaController {
             description = "Exclui uma consulta pelo seu ID"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Consulta excluída com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Consulta não encontrada")
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Consulta excluída com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Consulta não encontrada",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(

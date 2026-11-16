@@ -6,6 +6,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +18,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/proprietarios")
+@Tag(
+        name = "Proprietários",
+        description = "Operações relacionadas aos proprietários"
+)
 public class ProprietarioController {
 
     private final ProprietarioService proprietarioService;
@@ -27,11 +35,27 @@ public class ProprietarioController {
             description = "Cadastra um novo proprietário no sistema"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Proprietário cadastrado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Proprietário cadastrado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Proprietario.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @PostMapping
-    public ResponseEntity<Proprietario> salvar(@Valid @RequestBody Proprietario proprietario) {
+    public ResponseEntity<Proprietario> salvar(
+            @Valid @RequestBody Proprietario proprietario) {
+
         Proprietario novoProprietario = proprietarioService.salvar(proprietario);
         return ResponseEntity.status(201).body(novoProprietario);
     }
@@ -42,7 +66,13 @@ public class ProprietarioController {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "Lista de proprietários retornada com sucesso"
+            description = "Lista de proprietários retornada com sucesso",
+            content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(
+                            schema = @Schema(implementation = Proprietario.class)
+                    )
+            )
     )
     @GetMapping
     public ResponseEntity<List<Proprietario>> listarTodos() {
@@ -55,8 +85,22 @@ public class ProprietarioController {
             description = "Retorna um proprietário específico pelo seu ID"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Proprietário encontrado"),
-            @ApiResponse(responseCode = "404", description = "Proprietário não encontrado")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Proprietário encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Proprietario.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Proprietário não encontrado",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @GetMapping("/{id}")
     public ResponseEntity<Proprietario> buscarPorId(
@@ -72,8 +116,30 @@ public class ProprietarioController {
             description = "Atualiza os dados de um proprietário existente"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Proprietário atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Proprietário não encontrado")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Proprietário atualizado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Proprietario.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Proprietário não encontrado",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @PutMapping("/{id}")
     public ResponseEntity<Proprietario> atualizar(
@@ -81,7 +147,9 @@ public class ProprietarioController {
             @PathVariable Long id,
             @Valid @RequestBody Proprietario proprietario) {
 
-        Proprietario proprietarioAtualizado = proprietarioService.atualizar(id, proprietario);
+        Proprietario proprietarioAtualizado =
+                proprietarioService.atualizar(id, proprietario);
+
         return ResponseEntity.ok(proprietarioAtualizado);
     }
 
@@ -90,8 +158,18 @@ public class ProprietarioController {
             description = "Exclui um proprietário pelo seu ID"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Proprietário excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Proprietário não encontrado")
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Proprietário excluído com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Proprietário não encontrado",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(

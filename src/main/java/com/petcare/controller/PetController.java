@@ -10,11 +10,19 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import com.petcare.dto.PetDTO;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/pets")
+@Tag(
+        name = "Pets",
+        description = "Operações relacionadas aos pets"
+)
 public class PetController {
 
     private final PetService petService;
@@ -28,8 +36,22 @@ public class PetController {
             description = "Cadastra um novo pet no sistema"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Pet cadastrado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Pet cadastrado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Pet.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @PostMapping
     public ResponseEntity<Pet> salvar(@Valid @RequestBody Pet pet) {
@@ -43,7 +65,13 @@ public class PetController {
     )
     @ApiResponse(
             responseCode = "200",
-            description = "Lista de pets retornada com sucesso"
+            description = "Lista de pets retornada com sucesso",
+            content = @Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(
+                            schema = @Schema(implementation = Pet.class)
+                    )
+            )
     )
     @GetMapping
     public ResponseEntity<List<Pet>> listarTodos() {
@@ -56,7 +84,16 @@ public class PetController {
             description = "Retorna os pets associados a um proprietário"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Pets encontrados")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Pets encontrados",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(
+                                    schema = @Schema(implementation = Pet.class)
+                            )
+                    )
+            )
     })
     @GetMapping("/proprietario/{id}")
     public ResponseEntity<List<Pet>> buscarPetsPorProprietario(
@@ -72,8 +109,22 @@ public class PetController {
             description = "Retorna um pet específico pelo seu ID"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Pet encontrado"),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Pet encontrado",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PetDTO.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Pet não encontrado",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @GetMapping("/{id}")
     public ResponseEntity<PetDTO> buscarPorId(
@@ -98,8 +149,30 @@ public class PetController {
             description = "Atualiza os dados de um pet existente"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Pet atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Pet atualizado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Pet.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Pet não encontrado",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @PutMapping("/{id}")
     public ResponseEntity<Pet> atualizar(
@@ -116,8 +189,18 @@ public class PetController {
             description = "Exclui um pet pelo seu ID"
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Pet excluído com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Pet não encontrado")
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Pet excluído com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Pet não encontrado",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
