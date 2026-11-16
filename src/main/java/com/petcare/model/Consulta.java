@@ -30,9 +30,9 @@ public class Consulta {
     @Schema(description = "Identificador único da consulta")
     private UUID uuid;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "id_pet", nullable = false)
-    @Schema(description = "Pet da consulta")
     private Pet pet;
 
     @Column(name = "data_hora", nullable = false)

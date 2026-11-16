@@ -61,9 +61,9 @@ public class Pet {
     @Size(max = 255)
     private String observacoes;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "id_proprietario", nullable = false)
-    @Schema(description = "Proprietário do pet")
     private Proprietario proprietario;
 
     @OneToMany(mappedBy = "pet")
