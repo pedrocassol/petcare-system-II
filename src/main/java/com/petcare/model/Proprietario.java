@@ -49,9 +49,9 @@ public class Proprietario {
     )
     private String telefone;
 
-    @Column(length = 255)
-    @Schema(description = "Endereço do proprietário", example = "Rua das Flores, 123")
-    private String endereco;
+    @Embedded
+    @Schema(description = "Endereço do proprietário")
+    private Endereco endereco;
 
     @OneToMany(mappedBy = "proprietario")
     @JsonIgnore
