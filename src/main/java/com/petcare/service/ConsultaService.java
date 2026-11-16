@@ -4,6 +4,7 @@ import com.petcare.model.Consulta;
 import com.petcare.repository.ConsultaRepository;
 import org.springframework.stereotype.Service;
 import com.petcare.infra.ConsultaNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,14 +32,22 @@ public class ConsultaService {
                 ));
     }
 
+    @Transactional
     public Consulta atualizar(Long id, Consulta consulta) {
         Consulta existente = consultaRepository.findById(id)
                 .orElseThrow(() -> new ConsultaNotFoundException(
                         "Consulta não encontrada para o ID: " + id
                 ));
 
-        consulta.setId(existente.getId());
-        return consultaRepository.save(consulta);
+        existente.setPet(consulta.getPet());
+        existente.setDataHora(consulta.getDataHora());
+        existente.setVeterinario(consulta.getVeterinario());
+        existente.setDescricao(consulta.getDescricao());
+        existente.setValorEstimado(consulta.getValorEstimado());
+        existente.setStatus(consulta.getStatus());
+        existente.setObservacoes(consulta.getObservacoes());
+
+        return existente;
     }
 
     public void deletar(Long id) {

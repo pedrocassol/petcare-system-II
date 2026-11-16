@@ -4,6 +4,7 @@ import com.petcare.model.Pet;
 import com.petcare.repository.PetRepository;
 import org.springframework.stereotype.Service;
 import com.petcare.infra.PetNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,14 +32,22 @@ public class PetService {
                 ));
     }
 
+    @Transactional
     public Pet atualizar(Long id, Pet pet) {
         Pet existente = petRepository.findById(id)
                 .orElseThrow(() -> new PetNotFoundException(
                         "Pet não encontrado para o ID: " + id
                 ));
 
-        pet.setId(existente.getId());
-        return petRepository.save(pet);
+        existente.setNome(pet.getNome());
+        existente.setEspecie(pet.getEspecie());
+        existente.setRaca(pet.getRaca());
+        existente.setIdade(pet.getIdade());
+        existente.setSexo(pet.getSexo());
+        existente.setObservacoes(pet.getObservacoes());
+        existente.setProprietario(pet.getProprietario());
+
+        return existente;
     }
 
     public void deletar(Long id) {
