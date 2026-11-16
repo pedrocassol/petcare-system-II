@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import com.petcare.dto.PetDTO;
 
 import java.util.List;
 
@@ -75,12 +76,21 @@ public class PetController {
             @ApiResponse(responseCode = "404", description = "Pet não encontrado")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Pet> buscarPorId(
+    public ResponseEntity<PetDTO> buscarPorId(
             @Parameter(description = "ID do pet", example = "4")
             @PathVariable Long id) {
 
         Pet pet = petService.buscarPorId(id);
-        return ResponseEntity.ok(pet);
+
+        PetDTO petDTO = new PetDTO(
+                pet.getId(),
+                pet.getNome(),
+                pet.getEspecie(),
+                pet.getRaca(),
+                pet.getIdade()
+        );
+
+        return ResponseEntity.ok(petDTO);
     }
 
     @Operation(
