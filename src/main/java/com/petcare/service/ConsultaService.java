@@ -40,42 +40,6 @@ public class ConsultaService {
         return consultaRepository.findAll();
     }
 
-    public Consulta buscarPorId(Long id) {
-        return consultaRepository.findById(id)
-                .orElseThrow(() -> new ConsultaNotFoundException(
-                        "Consulta não encontrada para o ID: " + id
-                ));
-    }
-
-    @Transactional
-    public Consulta atualizar(Long id, Consulta consulta) {
-        Consulta existente = consultaRepository.findById(id)
-                .orElseThrow(() -> new ConsultaNotFoundException(
-                        "Consulta não encontrada para o ID: " + id
-                ));
-
-        Pet pet = buscarPetPorId(consulta.getPet().getId());
-
-        existente.setPet(pet);
-        existente.setDataHora(consulta.getDataHora());
-        existente.setVeterinario(consulta.getVeterinario());
-        existente.setDescricao(consulta.getDescricao());
-        existente.setValorEstimado(consulta.getValorEstimado());
-        existente.setStatus(consulta.getStatus());
-        existente.setObservacoes(consulta.getObservacoes());
-
-        return existente;
-    }
-
-    public void deletar(Long id) {
-        consultaRepository.findById(id)
-                .orElseThrow(() -> new ConsultaNotFoundException(
-                        "Consulta não encontrada para o ID: " + id
-                ));
-
-        consultaRepository.deleteById(id);
-    }
-
     public Consulta buscarPorUuid(UUID uuid) {
         return consultaRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ConsultaNotFoundException(

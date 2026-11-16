@@ -46,43 +46,6 @@ public class PetService {
         return petRepository.buscarPetsPorProprietario(uuid);
     }
 
-    public Pet buscarPorId(Long id) {
-        return petRepository.findById(id)
-                .orElseThrow(() -> new PetNotFoundException(
-                        "Pet não encontrado para o ID: " + id
-                ));
-    }
-
-    @Transactional
-    public Pet atualizar(Long id, Pet pet) {
-        Pet existente = petRepository.findById(id)
-                .orElseThrow(() -> new PetNotFoundException(
-                        "Pet não encontrado para o ID: " + id
-                ));
-
-        Proprietario proprietario =
-                buscarProprietarioPorId(pet.getProprietario().getId());
-
-        existente.setNome(pet.getNome());
-        existente.setEspecie(pet.getEspecie());
-        existente.setRaca(pet.getRaca());
-        existente.setIdade(pet.getIdade());
-        existente.setSexo(pet.getSexo());
-        existente.setObservacoes(pet.getObservacoes());
-        existente.setProprietario(proprietario);
-
-        return existente;
-    }
-
-    public void deletar(Long id) {
-        petRepository.findById(id)
-                .orElseThrow(() -> new PetNotFoundException(
-                        "Pet não encontrado para o ID: " + id
-                ));
-
-        petRepository.deleteById(id);
-    }
-
     public Pet buscarPorUuid(UUID uuid) {
         return petRepository.findByUuid(uuid)
                 .orElseThrow(() -> new PetNotFoundException(
