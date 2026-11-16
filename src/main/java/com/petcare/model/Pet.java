@@ -7,6 +7,8 @@ import org.hibernate.annotations.UuidGenerator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 
 import java.util.UUID;
 
@@ -61,4 +63,8 @@ public class Pet {
     @JoinColumn(name = "id_proprietario", nullable = false)
     @Schema(description = "Proprietário do pet")
     private Proprietario proprietario;
+
+    @OneToMany(mappedBy = "pet")
+    @JsonIgnore
+    private List<Consulta> consultas;
 }

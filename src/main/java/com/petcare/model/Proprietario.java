@@ -7,6 +7,8 @@ import org.hibernate.annotations.UuidGenerator;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 
 import java.util.UUID;
 
@@ -45,4 +47,8 @@ public class Proprietario {
     @Column(length = 255)
     @Schema(description = "Endereço do proprietário", example = "Rua das Flores, 123")
     private String endereco;
+
+    @OneToMany(mappedBy = "proprietario")
+    @JsonIgnore
+    private List<Pet> pets;
 }
