@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import java.util.UUID;
+import com.petcare.dto.PetPatchDTO;
 
 import java.util.List;
 
@@ -182,6 +183,47 @@ public class PetController {
             @Valid @RequestBody Pet pet) {
 
         Pet petAtualizado = petService.atualizarPorUuid(uuid, pet);
+        return ResponseEntity.ok(petAtualizado);
+    }
+
+    @Operation(
+            summary = "Atualizar parcialmente um pet",
+            description = "Atualiza somente os campos informados do pet"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Pet atualizado parcialmente",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Pet.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Pet não encontrado",
+                    content = @Content(
+                            mediaType = "text/plain",
+                            schema = @Schema(implementation = String.class)
+                    )
+            )
+    })
+    @PatchMapping("/{uuid}")
+    public ResponseEntity<Pet> atualizarParcialmente(
+            @Parameter(description = "UUID do pet")
+            @PathVariable UUID uuid,
+            @Valid @RequestBody PetPatchDTO dados) {
+
+        Pet petAtualizado = petService.atualizarParcialmente(uuid, dados);
+
         return ResponseEntity.ok(petAtualizado);
     }
 

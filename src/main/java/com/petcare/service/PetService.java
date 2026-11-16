@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.petcare.infra.PetNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
+import com.petcare.dto.PetPatchDTO;
 
 import java.util.List;
 
@@ -89,5 +90,37 @@ public class PetService {
     public void deletarPorUuid(UUID uuid) {
         Pet existente = buscarPorUuid(uuid);
         petRepository.deleteById(existente.getId());
+    }
+
+    @Transactional
+    public Pet atualizarParcialmente(UUID uuid, PetPatchDTO dados) {
+
+        Pet existente = buscarPorUuid(uuid);
+
+        if (dados.getNome() != null) {
+            existente.setNome(dados.getNome());
+        }
+
+        if (dados.getEspecie() != null) {
+            existente.setEspecie(dados.getEspecie());
+        }
+
+        if (dados.getRaca() != null) {
+            existente.setRaca(dados.getRaca());
+        }
+
+        if (dados.getIdade() != null) {
+            existente.setIdade(dados.getIdade());
+        }
+
+        if (dados.getSexo() != null) {
+            existente.setSexo(dados.getSexo());
+        }
+
+        if (dados.getObservacoes() != null) {
+            existente.setObservacoes(dados.getObservacoes());
+        }
+
+        return existente;
     }
 }
