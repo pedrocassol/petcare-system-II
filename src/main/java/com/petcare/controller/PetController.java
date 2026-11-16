@@ -107,8 +107,8 @@ public class PetController {
     }
 
     @Operation(
-            summary = "Buscar pet por ID",
-            description = "Retorna um pet específico pelo seu ID"
+            summary = "Buscar pet por UUID",
+            description = "Retorna um pet específico pelo seu UUID"
     )
     @ApiResponses({
             @ApiResponse(
@@ -229,7 +229,7 @@ public class PetController {
 
     @Operation(
             summary = "Excluir pet",
-            description = "Exclui um pet pelo seu ID"
+            description = "Exclui um pet pelo seu UUID"
     )
     @ApiResponses({
             @ApiResponse(

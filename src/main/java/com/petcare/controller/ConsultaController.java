@@ -82,8 +82,8 @@ public class ConsultaController {
     }
 
     @Operation(
-            summary = "Buscar consulta por ID",
-            description = "Retorna uma consulta específica pelo seu ID"
+            summary = "Buscar consulta por UUID",
+            description = "Retorna uma consulta específica pelo seu UUID"
     )
     @ApiResponses({
             @ApiResponse(
@@ -156,7 +156,7 @@ public class ConsultaController {
 
     @Operation(
             summary = "Excluir consulta",
-            description = "Exclui uma consulta pelo seu ID"
+            description = "Exclui uma consulta pelo seu UUID"
     )
     @ApiResponses({
             @ApiResponse(

@@ -82,8 +82,8 @@ public class ProprietarioController {
     }
 
     @Operation(
-            summary = "Buscar proprietário por ID",
-            description = "Retorna um proprietário específico pelo seu ID"
+            summary = "Buscar proprietário por UUID",
+            description = "Retorna um proprietário específico pelo seu UUID"
     )
     @ApiResponses({
             @ApiResponse(
@@ -159,7 +159,7 @@ public class ProprietarioController {
 
     @Operation(
             summary = "Excluir proprietário",
-            description = "Exclui um proprietário pelo seu ID"
+            description = "Exclui um proprietário pelo seu UUID"
     )
     @ApiResponses({
             @ApiResponse(
