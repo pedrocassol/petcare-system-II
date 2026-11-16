@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.UUID;
 
@@ -42,6 +43,10 @@ public class Proprietario {
     @Column(length = 20)
     @Schema(description = "Telefone do proprietário", example = "(55) 99999-9999")
     @Size(max = 20)
+    @Pattern(
+            regexp = "\\(\\d{2}\\) \\d{4,5}-\\d{4}",
+            message = "Telefone deve estar no formato (XX) XXXXX-XXXX"
+    )
     private String telefone;
 
     @Column(length = 255)
