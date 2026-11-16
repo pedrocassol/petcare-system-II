@@ -79,7 +79,7 @@ public class ProprietarioController {
     public ResponseEntity<Proprietario> atualizar(
             @Parameter(description = "ID do proprietário", example = "2")
             @PathVariable Long id,
-            @RequestBody Proprietario proprietario) {
+            @Valid @RequestBody Proprietario proprietario) {
 
         Proprietario proprietarioAtualizado = proprietarioService.atualizar(id, proprietario);
         return ResponseEntity.ok(proprietarioAtualizado);
