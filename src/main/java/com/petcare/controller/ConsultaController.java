@@ -79,7 +79,7 @@ public class ConsultaController {
     public ResponseEntity<Consulta> atualizar(
             @Parameter(description = "ID da consulta", example = "1")
             @PathVariable Long id,
-            @RequestBody Consulta consulta) {
+            @Valid @RequestBody Consulta consulta) {
 
         Consulta consultaAtualizada = consultaService.atualizar(id, consulta);
         return ResponseEntity.ok(consultaAtualizada);

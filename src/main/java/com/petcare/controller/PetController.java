@@ -79,7 +79,7 @@ public class PetController {
     public ResponseEntity<Pet> atualizar(
             @Parameter(description = "ID do pet", example = "4")
             @PathVariable Long id,
-            @RequestBody Pet pet) {
+            @Valid @RequestBody Pet pet) {
 
         Pet petAtualizado = petService.atualizar(id, pet);
         return ResponseEntity.ok(petAtualizado);
