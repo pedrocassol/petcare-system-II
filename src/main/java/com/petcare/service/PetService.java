@@ -1,25 +1,40 @@
+
 package com.petcare.service;
 
-import com.petcare.model.Pet;
-import com.petcare.repository.PetRepository;
-import org.springframework.stereotype.Service;
-import com.petcare.infra.PetNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.UUID;
 import com.petcare.dto.PetPatchDTO;
+import com.petcare.infra.PetNotFoundException;
+import com.petcare.infra.ProprietarioNotFoundException;
+import com.petcare.model.Pet;
+import com.petcare.model.Proprietario;
+import com.petcare.repository.PetRepository;
+import com.petcare.repository.ProprietarioRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PetService {
 
     private final PetRepository petRepository;
+    private final ProprietarioRepository proprietarioRepository;
 
-    public PetService(PetRepository petRepository) {
+    public PetService(
+            PetRepository petRepository,
+            ProprietarioRepository proprietarioRepository) {
+
         this.petRepository = petRepository;
+        this.proprietarioRepository = proprietarioRepository;
     }
 
+    @Transactional
     public Pet salvar(Pet pet) {
+        Proprietario proprietario =
+                buscarProprietarioPorId(pet.getProprietario().getId());
+
+        pet.setProprietario(proprietario);
+
         return petRepository.save(pet);
     }
 
@@ -45,13 +60,16 @@ public class PetService {
                         "Pet não encontrado para o ID: " + id
                 ));
 
+        Proprietario proprietario =
+                buscarProprietarioPorId(pet.getProprietario().getId());
+
         existente.setNome(pet.getNome());
         existente.setEspecie(pet.getEspecie());
         existente.setRaca(pet.getRaca());
         existente.setIdade(pet.getIdade());
         existente.setSexo(pet.getSexo());
         existente.setObservacoes(pet.getObservacoes());
-        existente.setProprietario(pet.getProprietario());
+        existente.setProprietario(proprietario);
 
         return existente;
     }
@@ -76,13 +94,16 @@ public class PetService {
     public Pet atualizarPorUuid(UUID uuid, Pet pet) {
         Pet existente = buscarPorUuid(uuid);
 
+        Proprietario proprietario =
+                buscarProprietarioPorId(pet.getProprietario().getId());
+
         existente.setNome(pet.getNome());
         existente.setEspecie(pet.getEspecie());
         existente.setRaca(pet.getRaca());
         existente.setIdade(pet.getIdade());
         existente.setSexo(pet.getSexo());
         existente.setObservacoes(pet.getObservacoes());
-        existente.setProprietario(pet.getProprietario());
+        existente.setProprietario(proprietario);
 
         return existente;
     }
@@ -122,5 +143,12 @@ public class PetService {
         }
 
         return existente;
+    }
+
+    private Proprietario buscarProprietarioPorId(Long id) {
+        return proprietarioRepository.findById(id)
+                .orElseThrow(() -> new ProprietarioNotFoundException(
+                        "Proprietário não encontrado para o ID: " + id
+                ));
     }
 }
