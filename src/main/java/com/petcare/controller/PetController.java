@@ -51,6 +51,22 @@ public class PetController {
     }
 
     @Operation(
+            summary = "Listar pets por proprietário",
+            description = "Retorna os pets associados a um proprietário"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Pets encontrados")
+    })
+    @GetMapping("/proprietario/{id}")
+    public ResponseEntity<List<Pet>> buscarPetsPorProprietario(
+            @Parameter(description = "ID do proprietário", example = "2")
+            @PathVariable Long id) {
+
+        List<Pet> pets = petService.buscarPetsPorProprietario(id);
+        return ResponseEntity.ok(pets);
+    }
+
+    @Operation(
             summary = "Buscar pet por ID",
             description = "Retorna um pet específico pelo seu ID"
     )
