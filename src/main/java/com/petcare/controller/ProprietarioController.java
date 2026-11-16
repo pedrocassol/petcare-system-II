@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -102,12 +103,15 @@ public class ProprietarioController {
                     )
             )
     })
-    @GetMapping("/{id}")
-    public ResponseEntity<Proprietario> buscarPorId(
-            @Parameter(description = "ID do proprietário", example = "2")
-            @PathVariable Long id) {
+    @GetMapping("/{uuid}")
+    public ResponseEntity<Proprietario> buscarPorUuid(
+            @Parameter(
+                    description = "UUID do proprietário",
+                    example = "e5a8a8c9-073e-4419-a662-ea0c1b825a73"
+            )
+            @PathVariable UUID uuid) {
 
-        Proprietario proprietario = proprietarioService.buscarPorId(id);
+        Proprietario proprietario = proprietarioService.buscarPorUuid(uuid);
         return ResponseEntity.ok(proprietario);
     }
 
@@ -141,14 +145,14 @@ public class ProprietarioController {
                     )
             )
     })
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     public ResponseEntity<Proprietario> atualizar(
-            @Parameter(description = "ID do proprietário", example = "2")
-            @PathVariable Long id,
+            @Parameter(description = "UUID do proprietário")
+            @PathVariable UUID uuid,
             @Valid @RequestBody Proprietario proprietario) {
 
         Proprietario proprietarioAtualizado =
-                proprietarioService.atualizar(id, proprietario);
+                proprietarioService.atualizarPorUuid(uuid, proprietario);
 
         return ResponseEntity.ok(proprietarioAtualizado);
     }
@@ -171,12 +175,12 @@ public class ProprietarioController {
                     )
             )
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deletar(
-            @Parameter(description = "ID do proprietário", example = "2")
-            @PathVariable Long id) {
+            @Parameter(description = "UUID do proprietário")
+            @PathVariable UUID uuid) {
 
-        proprietarioService.deletar(id);
+        proprietarioService.deletarPorUuid(uuid);
         return ResponseEntity.noContent().build();
     }
 }

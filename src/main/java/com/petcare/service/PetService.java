@@ -5,6 +5,7 @@ import com.petcare.repository.PetRepository;
 import org.springframework.stereotype.Service;
 import com.petcare.infra.PetNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class PetService {
         return petRepository.findAll();
     }
 
-    public List<Pet> buscarPetsPorProprietario(Long id) {
-        return petRepository.buscarPetsPorProprietario(id);
+    public List<Pet> buscarPetsPorProprietario(UUID uuid) {
+        return petRepository.buscarPetsPorProprietario(uuid);
     }
 
     public Pet buscarPorId(Long id) {
@@ -61,5 +62,32 @@ public class PetService {
                 ));
 
         petRepository.deleteById(id);
+    }
+
+    public Pet buscarPorUuid(UUID uuid) {
+        return petRepository.findByUuid(uuid)
+                .orElseThrow(() -> new PetNotFoundException(
+                        "Pet não encontrado para o UUID: " + uuid
+                ));
+    }
+
+    @Transactional
+    public Pet atualizarPorUuid(UUID uuid, Pet pet) {
+        Pet existente = buscarPorUuid(uuid);
+
+        existente.setNome(pet.getNome());
+        existente.setEspecie(pet.getEspecie());
+        existente.setRaca(pet.getRaca());
+        existente.setIdade(pet.getIdade());
+        existente.setSexo(pet.getSexo());
+        existente.setObservacoes(pet.getObservacoes());
+        existente.setProprietario(pet.getProprietario());
+
+        return existente;
+    }
+
+    public void deletarPorUuid(UUID uuid) {
+        Pet existente = buscarPorUuid(uuid);
+        petRepository.deleteById(existente.getId());
     }
 }

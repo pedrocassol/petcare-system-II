@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -102,12 +103,12 @@ public class ConsultaController {
                     )
             )
     })
-    @GetMapping("/{id}")
-    public ResponseEntity<Consulta> buscarPorId(
-            @Parameter(description = "ID da consulta", example = "1")
-            @PathVariable Long id) {
+    @GetMapping("/{uuid}")
+    public ResponseEntity<Consulta> buscarPorUuid(
+            @Parameter(description = "UUID da consulta")
+            @PathVariable UUID uuid) {
 
-        Consulta consulta = consultaService.buscarPorId(id);
+        Consulta consulta = consultaService.buscarPorUuid(uuid);
         return ResponseEntity.ok(consulta);
     }
 
@@ -141,13 +142,15 @@ public class ConsultaController {
                     )
             )
     })
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     public ResponseEntity<Consulta> atualizar(
-            @Parameter(description = "ID da consulta", example = "1")
-            @PathVariable Long id,
+            @Parameter(description = "UUID da consulta")
+            @PathVariable UUID uuid,
             @Valid @RequestBody Consulta consulta) {
 
-        Consulta consultaAtualizada = consultaService.atualizar(id, consulta);
+        Consulta consultaAtualizada =
+                consultaService.atualizarPorUuid(uuid, consulta);
+
         return ResponseEntity.ok(consultaAtualizada);
     }
 
@@ -169,12 +172,12 @@ public class ConsultaController {
                     )
             )
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deletar(
-            @Parameter(description = "ID da consulta", example = "1")
-            @PathVariable Long id) {
+            @Parameter(description = "UUID da consulta")
+            @PathVariable UUID uuid) {
 
-        consultaService.deletar(id);
+        consultaService.deletarPorUuid(uuid);
         return ResponseEntity.noContent().build();
     }
 }

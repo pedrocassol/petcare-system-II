@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -11,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PetDTO {
 
-    private Long id;
+    private UUID uuid;
     private String nome;
     private String especie;
     private String raca;

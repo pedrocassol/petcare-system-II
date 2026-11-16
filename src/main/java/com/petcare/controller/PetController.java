@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
+import java.util.UUID;
 
 import java.util.List;
 
@@ -95,12 +96,12 @@ public class PetController {
                     )
             )
     })
-    @GetMapping("/proprietario/{id}")
+    @GetMapping("/proprietario/{uuid}")
     public ResponseEntity<List<Pet>> buscarPetsPorProprietario(
-            @Parameter(description = "ID do proprietário", example = "2")
-            @PathVariable Long id) {
+            @Parameter(description = "UUID do proprietário")
+            @PathVariable UUID uuid) {
 
-        List<Pet> pets = petService.buscarPetsPorProprietario(id);
+        List<Pet> pets = petService.buscarPetsPorProprietario(uuid);
         return ResponseEntity.ok(pets);
     }
 
@@ -126,15 +127,15 @@ public class PetController {
                     )
             )
     })
-    @GetMapping("/{id}")
-    public ResponseEntity<PetDTO> buscarPorId(
-            @Parameter(description = "ID do pet", example = "4")
-            @PathVariable Long id) {
+    @GetMapping("/{uuid}")
+    public ResponseEntity<PetDTO> buscarPorUuid(
+            @Parameter(description = "UUID do pet")
+            @PathVariable UUID uuid) {
 
-        Pet pet = petService.buscarPorId(id);
+        Pet pet = petService.buscarPorUuid(uuid);
 
         PetDTO petDTO = new PetDTO(
-                pet.getId(),
+                pet.getUuid(),
                 pet.getNome(),
                 pet.getEspecie(),
                 pet.getRaca(),
@@ -174,13 +175,13 @@ public class PetController {
                     )
             )
     })
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     public ResponseEntity<Pet> atualizar(
-            @Parameter(description = "ID do pet", example = "4")
-            @PathVariable Long id,
+            @Parameter(description = "UUID do pet")
+            @PathVariable UUID uuid,
             @Valid @RequestBody Pet pet) {
 
-        Pet petAtualizado = petService.atualizar(id, pet);
+        Pet petAtualizado = petService.atualizarPorUuid(uuid, pet);
         return ResponseEntity.ok(petAtualizado);
     }
 
@@ -202,12 +203,12 @@ public class PetController {
                     )
             )
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<Void> deletar(
-            @Parameter(description = "ID do pet", example = "4")
-            @PathVariable Long id) {
+            @Parameter(description = "UUID do pet")
+            @PathVariable UUID uuid) {
 
-        petService.deletar(id);
+        petService.deletarPorUuid(uuid);
         return ResponseEntity.noContent().build();
     }
 }
